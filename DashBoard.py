@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function # 캘린더 API
 from PIL import Image, ImageTk
 from contextlib import contextmanager
 from tkinter import *
@@ -26,7 +26,7 @@ locale = 'ko_kr'
 setfont = '맑은 고딕'
 DayOfWeek = ['월', '화', '수', '목', '금', '토', '일']
 AMPM = {'AM':'오전', 'PM':'오후'}
-weather_locale = '춘천시 옥천동' # 네이버 날씨 받아올 곳
+weather_locale = '춘천시 옥천동' # 날씨 받아올 위치
 hour_4 = 14400000 # 4시간
 
 class Clock(Frame):
@@ -37,17 +37,17 @@ class Clock(Frame):
         self.timeLbl = Label(self, font=(setfont, large_text_size), fg="white", bg="black")
         self.timeLbl.pack(side=TOP, anchor=E)
         
-        # 나머지 요일
+        # 요일
         self.day_of_week1 = ''
         self.dayOWLbl = Label(self, text=self.day_of_week1, font=(setfont, small_text_size), fg="white", bg="black")
         self.dayOWLbl.pack(side=TOP, anchor=E)
         
-        # 시계 밑에 워터마크로
+        # 시계 밑에 워터마크
         self.watermark = '\n씨애랑 심창현 황승현'
         self.watermarkLbl = Label(self, text=self.watermark, font=(setfont, small_text_size, 'bold'), fg="white", bg="black")
         self.watermarkLbl.pack(side=TOP, anchor=E)
         
-        # 시간 새로고침, 받아오기
+        # 시간 
         self.update()
 
     def update(self):
@@ -73,17 +73,15 @@ class Weather(Frame):
         self.parsing()
     
     def parsing(self):
-        
         # tk 새로고침 위한 destroy()
         for widget in self.weatherContainer.winfo_children():
             widget.destroy()
             print('destroy')
         
-        # 네이버에서 파싱
+        # 네이버 날씨 파싱
         self.enc_location = urllib.parse.quote(weather_locale + '+날씨')
         
         self.url = 'https://search.naver.com/search.naver?ie=utf8&query='+ self.enc_location
-        
         self.req = Request(self.url)
         self.page = urlopen(self.req)
         self.html = self.page.read()
@@ -93,7 +91,7 @@ class Weather(Frame):
         self.temperature = self.soup.find('p', class_='info_temperature').find('span', class_='todaytemp').text + '℃'
         self.weatherinfo = self.soup.find('ul', class_='info_list').find('p', class_='cast_txt').text
         
-        #위치
+        # 위치
         self.weatherLbl1 = Label(self.weatherContainer, text = weather_locale, font=(setfont, medium_text_size, 'bold'), fg = "white", bg = "black")
         self.weatherLbl1.pack(side=TOP, anchor=W)
         # 온도
@@ -103,7 +101,7 @@ class Weather(Frame):
         self.weatherLbl3 = Label(self.weatherContainer, text = self.weatherinfo, font=(setfont, small_text_size), fg = "white", bg = "black")
         self.weatherLbl3.pack(side=TOP, anchor=W)
         
-        # 날씨 테스트용
+        # 날씨 
         print('============================')
         print('weather update time' + time.strftime(' %I:%M'))
         print(self.temperature)
@@ -125,12 +123,11 @@ class News(Frame):
         self.get_headlines()
 
     def get_headlines(self):
-        
         # tk 새로고침 위한 destroy()
         for widget in self.headlinesContainer.winfo_children():
             widget.destroy()
         
-        # 구글 rss
+        # 구글 rss 파싱
         headlines_url = "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko"     
         feed = feedparser.parse(headlines_url)
                 
@@ -138,7 +135,7 @@ class News(Frame):
             self.headline = Label(self.headlinesContainer, text=post.title, font=(setfont, small_text_size), fg="white", bg="black")
             self.headline.pack(side=TOP, anchor=W)
      
-        # 뉴스 테스트용
+        # 뉴스 콘솔출력
         print('============================')
         print('headline update time' + time.strftime(' %I:%M'))
         for n in feed.entries[0:5]:
@@ -158,12 +155,11 @@ class Calendar(Frame):
         self.get_events()
 
     def get_events(self):
-        
         # tk 새로고침 위한 destroy()
         for widget in self.calendarEventContainer.winfo_children():
             widget.destroy()
 
-        # 캘린더 startup.py 가져옴
+        # 이하 startup.py
         creds = None
     
         if os.path.exists('token.pickle'):
@@ -222,10 +218,10 @@ class FullscreenWindow:
         self.topFrame.pack(side = TOP, fill=BOTH, expand = YES)
         self.bottomFrame.pack(side = BOTTOM, fill=BOTH, expand = YES)
         
-        self.state = False # 전체화면 우선 False로 설정 후 아래 실행
-        self.tk.attributes("-fullscreen", True) # 일단 자동으로 바로 전체화면 뜨게함
-        self.tk.bind("<Return>", self.go_fullscreen) # 엔터 누르면 전체화면
-        self.tk.bind("<Escape>", self.end_fullscreen) # esc 종료
+        self.state = False # 전체화면 state = False
+        self.tk.attributes("-fullscreen", True) # 실행시 전체화면
+        self.tk.bind("<Return>", self.go_fullscreen) # 엔터 -> 전체화면
+        self.tk.bind("<Escape>", self.end_fullscreen) # esc -> 창모드
         
         # 시계
         self.clock = Clock(self.topFrame)
