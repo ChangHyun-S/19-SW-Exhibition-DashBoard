@@ -2,8 +2,8 @@
 2019년 씨애랑 소프트웨어 전시회 (SW Week 전시)
 
 ## DashBoard
-- 심창현 (https://github.com/changhyunsim)
-- 황승현 (https://github.com/HSHTrois)
+- [심창현](https://github.com/ChangHyun-S)
+- [황승현](https://github.com/HSHTrois)
 ## 개발환경
 Raspberry Pi 3, Python, Google Calendar API
 ## 작품설명
